@@ -1,3 +1,4 @@
 rootProject.name = "Football App"
 include ':app'
 include ':domain'
+include ':data'
