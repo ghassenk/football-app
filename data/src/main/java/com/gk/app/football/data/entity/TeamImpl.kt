@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class TeamImpl(
 
-   // @SerializedName("strTeam")
+    @SerializedName("strTeam")
     override val name: String,
     override val bannerUrl: String,
     override val thumbUrl: String,
@@ -13,6 +13,4 @@ data class TeamImpl(
     override val league: String,
     override val description: String
 
-
-) : Team {
-}
+) : Team

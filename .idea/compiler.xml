@@ -2,7 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="1.7">
-      <module name="Football_App.app" target="1.8" />
+      <module name="Football_App.app" target="11" />
       <module name="Football_App.data" target="1.8" />
     </bytecodeTargetLevel>
   </component>
