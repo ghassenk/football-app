@@ -3,7 +3,7 @@ package com.gk.app.football.data.entity
 import com.gk.app.football.domain.entity.Team
 import com.google.gson.annotations.SerializedName
 
-data class TeamImpl(
+internal data class TeamImpl(
 
     @SerializedName("strTeam")
     override val name: String,

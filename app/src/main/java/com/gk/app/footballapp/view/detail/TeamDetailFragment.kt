@@ -1,4 +1,4 @@
-package com.gk.app.footballapp.view
+package com.gk.app.footballapp.view.detail
 
 import android.os.Bundle
 import android.view.LayoutInflater

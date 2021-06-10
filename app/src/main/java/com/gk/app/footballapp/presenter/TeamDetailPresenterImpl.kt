@@ -1,4 +1,6 @@
 package com.gk.app.footballapp.presenter
 
-class TeamDetailPresenterImpl : TeamDetailPresenter {
+import com.gk.app.footballapp.view.detail.TeamDetailView
+
+class TeamDetailPresenterImpl(override val view: TeamDetailView) : TeamDetailPresenter {
 }
