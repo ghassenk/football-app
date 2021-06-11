@@ -1,7 +1,14 @@
 package com.gk.app.footballapp.view.detail
 
-interface TeamDetailView {
-    fun onViewDestroyed()//?
+import com.gk.app.footballapp.view.BaseView
 
-    fun updateDetails(imageUrl: String, title: String, description: String)
+interface TeamDetailView : BaseView {
+
+    fun updateDetails(
+        bannerUrl: String?,
+        teamName: String?,
+        countryName: String?,
+        leagueName: String?,
+        description: String?,
+    )
 }

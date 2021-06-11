@@ -1,10 +1,10 @@
 package com.gk.app.football.domain.entity
 
 interface Team {
-    val name: String
-    val bannerUrl: String
-    val thumbUrl: String
-    val country: String
-    val league: String
-    val description: String
+    var name: String
+    var bannerUrl: String?
+    var badgeUrl: String?
+    var country: String?
+    var league: String?
+    var description: String?
 }

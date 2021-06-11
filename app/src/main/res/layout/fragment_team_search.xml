@@ -12,17 +12,13 @@
         android:id="@+id/search_fragment_edit_text"
         android:layout_width="0dp"
         android:layout_height="50dp"
+        android:drawableLeft="@android:drawable/ic_search_category_default"
+        android:padding="5dp"
         android:hint="@string/search_by_league"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:layout_margin="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/search_fragment_button"
-        app:layout_constraintTop_toTopOf="parent" />
-    <!--    android:drawableLeft="@android:drawable/ic_search_category_default"-->
-
-    <ImageButton
-        android:id="@+id/search_fragment_button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@android:drawable/ic_search_category_default"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

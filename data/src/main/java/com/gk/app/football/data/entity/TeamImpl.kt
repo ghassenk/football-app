@@ -6,11 +6,16 @@ import com.google.gson.annotations.SerializedName
 internal data class TeamImpl(
 
     @SerializedName("strTeam")
-    override val name: String,
-    override val bannerUrl: String,
-    override val thumbUrl: String,
-    override val country: String,
-    override val league: String,
-    override val description: String
+    override var name: String,
+    @SerializedName("strTeamBanner")
+    override var bannerUrl: String?,
+    @SerializedName("strTeamBadge")
+    override var badgeUrl: String?,
+    @SerializedName("strCountry")
+    override var country: String?,
+    @SerializedName("strLeague")
+    override var league: String?,
+    @SerializedName("strDescriptionEN")
+    override var description: String?,
 
-) : Team
+    ) : Team

@@ -20,13 +20,15 @@ class MainActivity : FragmentActivity(), MainView {
         supportFragmentManager.beginTransaction()
             .replace(R.id.main_fragment_container, teamSearchFragment)
             .commit()
+
     }
 
     override fun showTeamDetailView(team: TeamListItem) {
-        val teamDetailFragment = TeamDetailFragment.newInstance()
+        val teamDetailFragment = TeamDetailFragment.newInstance(team.teamName)
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.main_fragment_container, teamDetailFragment)
+            .add(R.id.main_fragment_container, teamDetailFragment)
+            .addToBackStack("detail")
             .commit()
     }
 

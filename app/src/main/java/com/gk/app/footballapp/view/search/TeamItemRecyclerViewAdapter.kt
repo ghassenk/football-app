@@ -36,7 +36,7 @@ class TeamItemRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
-        imageLoader.loadImage(holder.imageView, item.imageUrl)
+        item.imageUrl?.let { imageLoader.loadImage(holder.imageView, it) }
         holder.imageView.contentDescription = item.teamName
         holder.itemView.setOnClickListener { onItemClick(item) }
     }

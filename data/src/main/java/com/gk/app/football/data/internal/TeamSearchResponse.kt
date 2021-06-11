@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 
 internal data class TeamSearchResponse(
     @SerializedName("teams")
-    val teams: List<TeamImpl>
+    var teams: List<TeamImpl>? = null
 )

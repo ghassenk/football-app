@@ -5,12 +5,11 @@ import com.gk.app.football.domain.entity.Team
 
 interface TeamGateway {
 
-    suspend fun searchTeamsByLeagueName(leagueName: String): List<Team>
+    suspend fun searchTeamsByLeagueName(leagueName: String): List<Team>?
 
-    suspend fun searchTeamDetails(teamName: String): List<Team>
+    suspend fun searchTeamDetails(teamName: String): List<Team>?
 
-    suspend fun searchAllLeagues(): List<League>
+    suspend fun searchAllLeagues(): List<League>?
 
-    fun getLeagueNames(): List<String>
-
+    fun getLeagueNames(): List<String>?
 }

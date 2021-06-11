@@ -1,20 +1,20 @@
 package com.gk.app.footballapp.view.search
 
-interface TeamSearchView {
+import com.gk.app.footballapp.view.BaseView
 
+interface TeamSearchView : BaseView {
+
+    //region View Events
     fun onSearchClicked()
     fun onListItemClicked(item: TeamListItem)
-    fun onViewDestroyed()
-    //fun onBack()
+    //endregion
 
+    //region View Updates
     fun updateSearchListItems(items: List<TeamListItem>)
     fun updateAutocompleteList(words: List<String>)
     fun disableSearch()
     fun enableSearch()
-    fun showError(message: String)
-    fun hideError()
-    fun showProgress()
-    fun hideProgress()
     fun hideKeyboard()
+    //endregion
 
 }

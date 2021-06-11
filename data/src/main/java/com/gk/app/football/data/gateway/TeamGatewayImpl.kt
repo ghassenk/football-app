@@ -5,15 +5,23 @@ import com.gk.app.football.domain.entity.League
 import com.gk.app.football.domain.entity.Team
 import com.gk.app.football.domain.gateway.TeamGateway
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class TeamGatewayImpl(
-    private val apiBaseUrl: String
+    private val apiBaseUrl: String,
+    private val enableHttpLogging: Boolean,
 ) : TeamGateway {
 
     private val okHttpClient: OkHttpClient by lazy {
-        OkHttpClient.Builder().build()
+        if (enableHttpLogging) {
+            val loggingInterceptor = HttpLoggingInterceptor()
+            loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+            OkHttpClient.Builder().addInterceptor(loggingInterceptor).build()
+        } else {
+            OkHttpClient.Builder().build()
+        }
     }
 
     private val webservice: ApiWebservice by lazy {
@@ -25,22 +33,26 @@ class TeamGatewayImpl(
         retrofit.create(ApiWebservice::class.java)
     }
 
-    private val leagueNames = ArrayList<String>()
+    private var leagueNames : ArrayList<String>? = null
 
-    override suspend fun searchTeamsByLeagueName(leagueName: String): List<Team> {
-        val queryMap = mapOf(leagueName to "l")
+    override suspend fun searchTeamsByLeagueName(leagueName: String): List<Team>? {
+        val queryMap = mapOf("l" to leagueName)
         val response = webservice.searchTeams(
             endpointPath = "search_all_teams.php",
+            cacheControl = "max-age=3600", //refresh every hour
             queryMap = queryMap,
         )
+
+        println("response=$response")
 
         return response.teams
     }
 
-    override suspend fun searchTeamDetails(teamName: String): List<Team> {
-        val queryMap = mapOf(teamName to "t")
+    override suspend fun searchTeamDetails(teamName: String): List<Team>? {
+        val queryMap = mapOf("t" to teamName)
         val response = webservice.searchTeams(
             endpointPath = "searchteams.php",
+            cacheControl = "max-age=3600", //refresh every hour
             queryMap = queryMap,
         )
 
@@ -50,16 +62,17 @@ class TeamGatewayImpl(
     override suspend fun searchAllLeagues(): List<League> {
         val response = webservice.searchLeagues(
             endpointPath = "all_leagues.php",
-            cacheControl = "max-age=600000"
+            cacheControl = "max-age=600000" //refresh every week
         )
 
         // Add to memory cache
-        response.leagues.forEach { leagueNames.add(it.name) }
+        leagueNames = ArrayList()
+        response.leagues.forEach { leagueNames!!.add(it.name) }
 
         return response.leagues
     }
 
-    override fun getLeagueNames(): List<String> {
+    override fun getLeagueNames(): List<String>? {
         return leagueNames
     }
 

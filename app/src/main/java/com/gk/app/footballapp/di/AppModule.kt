@@ -1,21 +1,20 @@
-package com.gk.app.footballapp.di.app
+package com.gk.app.footballapp.di
 
-import android.content.Context
 import com.gk.app.footballapp.view.image.GlideImageLoader
 import com.gk.app.footballapp.view.image.ImageLoader
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
     @Provides
-    fun provideImageLoader(@ApplicationContext appContext: Context): ImageLoader {
+    @Singleton
+    fun provideImageLoader(): ImageLoader {
         return GlideImageLoader()
     }
 }

@@ -1,8 +1,9 @@
-package com.gk.app.footballapp.di.app
+package com.gk.app.footballapp.di
 
 import androidx.fragment.app.Fragment
 import com.gk.app.football.data.gateway.TeamGatewayImpl
 import com.gk.app.football.domain.gateway.TeamGateway
+import com.gk.app.footballapp.BuildConfig
 import com.gk.app.footballapp.presenter.TeamDetailPresenter
 import com.gk.app.footballapp.presenter.TeamDetailPresenterImpl
 import com.gk.app.footballapp.presenter.TeamSearchPresenter
@@ -20,7 +21,7 @@ import dagger.hilt.android.components.FragmentComponent
 class FragmentModule {
 
     private val teamGateway: TeamGateway by lazy {
-        TeamGatewayImpl("https://www.thesportsdb.com/api/v1/json/1/")
+        TeamGatewayImpl("https://www.thesportsdb.com/api/v1/json/1/", BuildConfig.DEBUG)
     }
 
     @Provides
@@ -29,8 +30,8 @@ class FragmentModule {
     ): TeamSearchPresenter {
         return TeamSearchPresenterImpl(
             fragment as TeamSearchView,
+            fragment.activity as MainView,
             teamGateway,
-            fragment.activity as MainView
         )
     }
 
@@ -38,8 +39,8 @@ class FragmentModule {
     fun provideTeamDetailPresenter(fragment: Fragment): TeamDetailPresenter {
         return TeamDetailPresenterImpl(
             fragment as TeamDetailView,
+            fragment.activity as MainView,
             teamGateway,
-            fragment.activity as MainView
         )
     }
 }

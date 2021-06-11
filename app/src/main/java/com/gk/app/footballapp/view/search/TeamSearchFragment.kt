@@ -2,15 +2,19 @@ package com.gk.app.footballapp.view.search
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.gk.app.footballapp.BuildConfig
 import com.gk.app.footballapp.R
 import com.gk.app.footballapp.presenter.TeamSearchPresenter
 import com.gk.app.footballapp.view.image.ImageLoader
@@ -23,6 +27,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class TeamSearchFragment : Fragment(), TeamSearchView {
 
+    private val logTag = javaClass.simpleName
+
     @Inject
     lateinit var teamSearchPresenter: TeamSearchPresenter
 
@@ -31,15 +37,16 @@ class TeamSearchFragment : Fragment(), TeamSearchView {
     private var columnCount = 1
     private lateinit var autocompleteAdapter: ArrayAdapter<String>
     private lateinit var recyclerAdapter: TeamItemRecyclerViewAdapter
-    private lateinit var editText: AutoCompleteTextView
-    private lateinit var searchButton: ImageButton
+    private var editText: AutoCompleteTextView? = null
     private lateinit var recyclerView: RecyclerView
-    private lateinit var errorText: TextView
-    private lateinit var progressBar: ProgressBar
+    override lateinit var errorText: TextView
+    override lateinit var progressBar: ProgressBar
 
-    // TODO add progress bar and block multiple search
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (BuildConfig.DEBUG) {
+            Log.v(logTag, "onCreate()")
+        }
         super.onCreate(savedInstanceState)
 
         arguments?.let {
@@ -47,33 +54,71 @@ class TeamSearchFragment : Fragment(), TeamSearchView {
         }
     }
 
+    override fun onDestroyView() {
+        if (BuildConfig.DEBUG) {
+            Log.v(logTag, "onDestroyView()")
+        }
+        super.onDestroyView()
+
+        teamSearchPresenter.onViewDestroyed()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        if (BuildConfig.DEBUG) {
+            Log.v(logTag, "onSaveInstanceState()")
+        }
+        super.onSaveInstanceState(outState)
+        editText?.let {
+            if (!it.text.isNullOrEmpty()) {
+                outState.putString(SAVED_STATE_KEY_EDIT_TEXT, it.text.toString())
+            }
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        if (BuildConfig.DEBUG) {
+            Log.v(logTag, "onCreateView() savedInstanceState=$savedInstanceState")
+        }
         val view = inflater.inflate(R.layout.fragment_team_search, container, false)
         recyclerView = view.findViewById(R.id.search_fragment_recycler)
         editText = view.findViewById(R.id.search_fragment_edit_text)
-        searchButton = view.findViewById(R.id.search_fragment_button)
         errorText = view.findViewById(R.id.search_fragment_error_text)
         progressBar = view.findViewById(R.id.search_fragment_progress_bar)
 
-        // Set button click listener
-        searchButton.setOnClickListener {
-            if (!editText.text.isNullOrBlank()) {
-                onSearchClicked()
-            }
-        }
 
-        // Set the autocomplete search edit text
-        with(editText) {
+        // Set the search edit text
+        editText?.let {
+            savedInstanceState?.let { bundle ->
+                val savedText = bundle.getString(SAVED_STATE_KEY_EDIT_TEXT)
+                if (!savedText.isNullOrEmpty()) {
+                    it.setText(savedText)
+                }
+            }
             autocompleteAdapter =
                 ArrayAdapter<String>(
-                    context,
+                    it.context,
                     android.R.layout.simple_dropdown_item_1line,
                     emptyList()
                 )
-            setAdapter(autocompleteAdapter)
+            it.setAdapter(autocompleteAdapter)
+
+            it.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+                override fun onEditorAction(
+                    textView: TextView?,
+                    actionId: Int,
+                    keyEvent: KeyEvent?
+                ): Boolean {
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                        onSearchClicked()
+                        return true
+                    }
+                    return false
+                }
+
+            })
         }
 
         // Set the recycler view
@@ -82,6 +127,7 @@ class TeamSearchFragment : Fragment(), TeamSearchView {
                 columnCount <= 1 -> LinearLayoutManager(context)
                 else -> GridLayoutManager(context, columnCount)
             }
+
             recyclerAdapter = TeamItemRecyclerViewAdapter(imageLoader) { onListItemClicked(it) }
             adapter = recyclerAdapter
         }
@@ -90,16 +136,16 @@ class TeamSearchFragment : Fragment(), TeamSearchView {
     }
 
     override fun onSearchClicked() {
-        val keyword = editText.text.toString()
-        teamSearchPresenter.onSearchClicked(keyword)
+        editText?.let {
+            if (!it.text.isNullOrEmpty()) {
+                val keyword = it.text.toString()
+                teamSearchPresenter.onSearchClicked(keyword)
+            }
+        }
     }
 
     override fun onListItemClicked(item: TeamListItem) {
         teamSearchPresenter.onTeamListItemClicked(item)
-    }
-
-    override fun onViewDestroyed() {
-        teamSearchPresenter.onViewDestroyed()
     }
 
     override fun updateSearchListItems(items: List<TeamListItem>) {
@@ -112,46 +158,38 @@ class TeamSearchFragment : Fragment(), TeamSearchView {
     }
 
     override fun disableSearch() {
-        searchButton.isEnabled = false
-        editText.isEnabled = false
+        editText?.isEnabled = false
     }
 
     override fun enableSearch() {
-        searchButton.isEnabled = true
-        editText.isEnabled = true
+        editText?.isEnabled = true
     }
 
     override fun showError(message: String) {
         recyclerView.visibility = View.GONE
-        progressBar.visibility = View.GONE
-        errorText.visibility = View.VISIBLE
-        errorText.text = message
+        super.showError(message)
     }
 
     override fun hideError() {
         recyclerView.visibility = View.VISIBLE
-        errorText.visibility = View.GONE
+        super.hideError()
     }
 
-    override fun showProgress() {
-        progressBar.visibility = View.VISIBLE
-    }
-
-    override fun hideProgress() {
-        progressBar.visibility = View.GONE
-    }
 
     override fun hideKeyboard() {
-        val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-        imm?.hideSoftInputFromWindow(editText.windowToken, 0)
+        editText?.let {
+            val imm =
+                it.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+            imm?.hideSoftInputFromWindow(it.windowToken, 0)
+        }
     }
+
 
     companion object {
 
-        // TODO: Customize parameter argument names
-        const val ARG_COLUMN_COUNT = "column-count"
+        private const val SAVED_STATE_KEY_EDIT_TEXT = "edit-text"
+        private const val ARG_COLUMN_COUNT = "column-count"
 
-        // TODO: Customize parameter initialization
         @JvmStatic
         fun newInstance(columnCount: Int) =
             TeamSearchFragment().apply {

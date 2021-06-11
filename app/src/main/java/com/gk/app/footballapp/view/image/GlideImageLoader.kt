@@ -12,7 +12,7 @@ class GlideImageLoader : ImageLoader {
             .with(imageView)
             .load(url)
             .centerCrop()
-//            .placeholder(android.R.drawable.?)
+            .placeholder(android.R.drawable.ic_menu_gallery)
             .into(imageView);
     }
 }
