@@ -13,6 +13,7 @@ import com.gk.app.footballapp.view.image.ImageLoader
  */
 class TeamItemRecyclerViewAdapter(
     private val imageLoader: ImageLoader,
+    private val onItemClick: (TeamListItem) -> Unit
 ) : RecyclerView.Adapter<TeamItemRecyclerViewAdapter.ViewHolder>() {
 
     private val values = ArrayList<TeamListItem>()
@@ -37,6 +38,7 @@ class TeamItemRecyclerViewAdapter(
         val item = values[position]
         imageLoader.loadImage(holder.imageView, item.imageUrl)
         holder.imageView.contentDescription = item.teamName
+        holder.itemView.setOnClickListener { onItemClick(item) }
     }
 
     override fun getItemCount(): Int = values.size

@@ -1,4 +1,4 @@
-package com.gk.app.footballapp.di
+package com.gk.app.footballapp.di.domain
 
 import dagger.Module
 import dagger.hilt.InstallIn
