@@ -14,11 +14,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
-import javax.inject.Singleton
 
 @Module
 @InstallIn(FragmentComponent::class)
 class FragmentModule {
+
+    private val teamGateway: TeamGateway by lazy {
+        TeamGatewayImpl("https://www.thesportsdb.com/api/v1/json/1/")
+    }
 
     @Provides
     fun provideLeagueSearchPresenter(
@@ -26,13 +29,17 @@ class FragmentModule {
     ): TeamSearchPresenter {
         return TeamSearchPresenterImpl(
             fragment as TeamSearchView,
-            TeamGatewayImpl("https://www.thesportsdb.com/api/v1/json/1/"),
+            teamGateway,
             fragment.activity as MainView
         )
     }
 
     @Provides
     fun provideTeamDetailPresenter(fragment: Fragment): TeamDetailPresenter {
-        return TeamDetailPresenterImpl(fragment as TeamDetailView)
+        return TeamDetailPresenterImpl(
+            fragment as TeamDetailView,
+            teamGateway,
+            fragment.activity as MainView
+        )
     }
 }
