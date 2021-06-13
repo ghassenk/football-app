@@ -55,10 +55,9 @@ class TeamDetailFragment : Fragment(), TeamDetailView {
         return view
     }
 
-
     companion object {
 
-        private const val ARG_TEAM_NAME = "team-name"
+        const val ARG_TEAM_NAME = "team-name"
 
         @JvmStatic
         fun newInstance(teamName: String) =

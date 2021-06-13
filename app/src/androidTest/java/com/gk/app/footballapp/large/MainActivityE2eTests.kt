@@ -3,8 +3,7 @@ package com.gk.app.footballapp.large
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.replaceText
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -25,15 +24,17 @@ class MainActivityE2eTests {
     private lateinit var activityScenario: ActivityScenario<MainActivity>
     private var activity: MainActivity? = null
 
-    // We use content descriptions to check images (for frequently changing API content we would
-    // probably use a mock api)
+    // We use content descriptions to check images and real api content.
+    // (for frequently changing API content we would probably use a mock api)
     private val expectedSearchResultDescriptions = arrayListOf(
         "Angers", "Bordeaux", "Brest", "Clermont Foot", "Lens", "Lille", "Lorient", "Lyon",
         "Marseille", "Metz", "Monaco", "Montpellier", "Nantes", "Nice", "Paris SG", "Rennes",
         "St Etienne", "Stade de Reims", "Strasbourg", "Troyes",
     )
-    private val testLeagueName = "French league 1"
+    private val testFakeLeagueName = "bla bla"// we assume that this league does not exist
+    private val testLeagueName = "French ligue 1"
     private val testClickTeamName = "Paris SG"
+    private val testClickPosition = 14
 
     // For simplification we will use only the beginning of the description
     private val expectedTeamDescription =
@@ -55,10 +56,12 @@ class MainActivityE2eTests {
         activityScenario.moveToState(Lifecycle.State.RESUMED)
         assert(activityScenario.state == Lifecycle.State.RESUMED)
 
-        // When - I type "france" in the search bar
-        Espresso.onView(withId(R.id.search_fragment_edit_text)).perform(
-            replaceText(testLeagueName)
-        )
+        // When - I type league name in the search bar
+        Espresso.onView(withId(R.id.search_fragment_edit_text))
+            .perform(replaceText(testLeagueName))
+            .perform(pressImeActionButton())
+
+        Thread.sleep(2000)
 
         // Then - I get the correct list of France's teams
         val list = Espresso.onView(withId(R.id.search_fragment_recycler))
@@ -71,24 +74,43 @@ class MainActivityE2eTests {
     }
 
     @Test
+    fun searchFakeLeague_ShowsError() {
+
+        // Given - A resumed MainActivity
+        activityScenario.moveToState(Lifecycle.State.CREATED)
+        activityScenario.moveToState(Lifecycle.State.RESUMED)
+        assert(activityScenario.state == Lifecycle.State.RESUMED)
+
+        // When - I type fake league name in the search bar
+        Espresso.onView(withId(R.id.search_fragment_edit_text))
+            .perform(replaceText(testFakeLeagueName))
+            .perform(pressImeActionButton())
+
+        Thread.sleep(2000)
+
+
+        // Then - An error is shown with the correct message
+        Espresso.onView(withText("No teams found!"))
+    }
+
+    @Test
     fun clickOnTeamListItem_ShowsCorrectResult() {
 
         // Given - A resumed MainActivity already showing a list of teams as a search result
         activityScenario.moveToState(Lifecycle.State.CREATED)
         activityScenario.moveToState(Lifecycle.State.RESUMED)
         assert(activityScenario.state == Lifecycle.State.RESUMED)
-        Espresso.onView(withId(R.id.search_fragment_edit_text)).perform(
-            replaceText(testLeagueName)
-        )
-        val list = Espresso.onView(withId(R.id.search_fragment_recycler)).check(
-            matches(isDisplayed())
-        )
+        val list = Espresso.onView(withId(R.id.search_fragment_recycler))
+
+        Espresso.onView(withId(R.id.search_fragment_edit_text))
+            .perform(replaceText(testLeagueName))
+            .perform(pressImeActionButton())
+
+        Thread.sleep(2000)
 
         // When - I click on an item
         list.perform(
-            RecyclerViewActions.scrollTo<TeamItemRecyclerViewAdapter.ViewHolder>(
-                withContentDescription(testClickTeamName)
-            )
+            RecyclerViewActions.scrollToPosition<TeamItemRecyclerViewAdapter.ViewHolder>(testClickPosition)
         )
         Espresso.onView(withContentDescription(testClickTeamName)).perform(click())
 
@@ -100,8 +122,9 @@ class MainActivityE2eTests {
         Espresso.onView(withId(R.id.detail_fragment_description)).check(
             matches(withText(startsWith(expectedTeamDescription)))
         )
-
     }
+
+
 
     //@Test
     fun templateTest() {
