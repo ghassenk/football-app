@@ -2,6 +2,8 @@ package com.gk.app.footballapp.view.search
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -10,7 +12,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,6 +43,7 @@ class TeamSearchFragment : Fragment(), TeamSearchView {
     private lateinit var recyclerView: RecyclerView
     override lateinit var errorText: TextView
     override lateinit var progressBar: ProgressBar
+    private lateinit var clearButton: ImageButton
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,6 +90,10 @@ class TeamSearchFragment : Fragment(), TeamSearchView {
         editText = view.findViewById(R.id.search_fragment_edit_text)
         errorText = view.findViewById(R.id.search_fragment_error_text)
         progressBar = view.findViewById(R.id.search_fragment_progress_bar)
+        clearButton = view.findViewById(R.id.search_fragment_clear_button)
+
+        // Set cancel button
+        clearButton.setOnClickListener { editText?.text?.clear() }
 
         // Set the search edit text
         editText?.let {
@@ -111,6 +117,20 @@ class TeamSearchFragment : Fragment(), TeamSearchView {
                         return true
                     }
                     return false
+                }
+            })
+
+            it.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+                override fun afterTextChanged(editable: Editable?) {
+                    if (editable.isNullOrEmpty()) {
+                        clearButton.visibility = View.GONE
+                    } else {
+                        clearButton.visibility = View.VISIBLE
+                    }
                 }
             })
         }
