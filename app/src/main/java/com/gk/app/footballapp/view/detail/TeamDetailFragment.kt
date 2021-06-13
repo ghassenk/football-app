@@ -1,6 +1,7 @@
 package com.gk.app.footballapp.view.detail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.gk.app.footballapp.BuildConfig
 import com.gk.app.footballapp.R
 import com.gk.app.footballapp.presenter.TeamDetailPresenter
 import com.gk.app.footballapp.view.image.ImageLoader
@@ -17,10 +19,14 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class TeamDetailFragment : Fragment(), TeamDetailView {
 
+    private val logTag = javaClass.simpleName
+
     @Inject
     lateinit var teamDetailPresenter: TeamDetailPresenter
     override lateinit var errorText: TextView
     override lateinit var progressBar: ProgressBar
+
+    lateinit var scrollView: View
     private lateinit var teamNameText: TextView
     private lateinit var bannerImage: ImageView
     private lateinit var countryNameText: TextView
@@ -44,6 +50,7 @@ class TeamDetailFragment : Fragment(), TeamDetailView {
         countryNameText = view.findViewById(R.id.detail_fragment_country_text)
         leagueNameText = view.findViewById(R.id.detail_fragment_league_text)
         descriptionText = view.findViewById(R.id.detail_fragment_description)
+        scrollView = view.findViewById(R.id.detail_fragment_scroll_view)
 
         val team = arguments?.getString(ARG_TEAM_NAME)
         team?.let {
@@ -66,6 +73,23 @@ class TeamDetailFragment : Fragment(), TeamDetailView {
                     putString(ARG_TEAM_NAME, teamName)
                 }
             }
+    }
+
+    override fun showError(message: String) {
+        if (BuildConfig.DEBUG) {
+            Log.i(logTag, "showError() $message")
+        }
+        scrollView.visibility = View.GONE
+
+        super.showError(message)
+    }
+
+    override fun hideError() {
+
+        // TODO can be improved with constraint group
+        scrollView.visibility = View.VISIBLE
+
+        super.hideError()
     }
 
     override fun updateDetails(

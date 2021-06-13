@@ -8,6 +8,10 @@
         <activity
             android:name=".HiltTestActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".HiltTestMainActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

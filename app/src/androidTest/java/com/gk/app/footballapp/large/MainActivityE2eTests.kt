@@ -10,6 +10,12 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.gk.app.footballapp.R
+import com.gk.app.footballapp.TestData.expectedSearchResultDescriptions
+import com.gk.app.footballapp.TestData.expectedTeamDescription
+import com.gk.app.footballapp.TestData.testClickPosition
+import com.gk.app.footballapp.TestData.testClickTeamName
+import com.gk.app.footballapp.TestData.testFakeLeagueName
+import com.gk.app.footballapp.TestData.testLeagueName
 import com.gk.app.footballapp.view.MainActivity
 import com.gk.app.footballapp.view.search.TeamItemRecyclerViewAdapter
 import org.hamcrest.Matchers.startsWith
@@ -23,24 +29,6 @@ class MainActivityE2eTests {
 
     private lateinit var activityScenario: ActivityScenario<MainActivity>
     private var activity: MainActivity? = null
-
-    // We use content descriptions to check images and real api content.
-    // (for frequently changing API content we would probably use a mock api)
-    private val expectedSearchResultDescriptions = arrayListOf(
-        "Angers", "Bordeaux", "Brest", "Clermont Foot", "Lens", "Lille", "Lorient", "Lyon",
-        "Marseille", "Metz", "Monaco", "Montpellier", "Nantes", "Nice", "Paris SG", "Rennes",
-        "St Etienne", "Stade de Reims", "Strasbourg", "Troyes",
-    )
-    private val testFakeLeagueName = "bla bla"// we assume that this league does not exist
-    private val testLeagueName = "French ligue 1"
-    private val testClickTeamName = "Paris SG"
-    private val testClickPosition = 14
-
-    // For simplification we will use only the beginning of the description
-    private val expectedTeamDescription =
-        "Paris Saint-Germain Football Club, commonly referred to " +
-                "as Paris Saint-Germain, Paris SG, or simply Paris or PSG, is a French professional " +
-                "football club based in Paris. Founded in 1970,"
 
     @Before
     fun setUp() {
@@ -96,7 +84,7 @@ class MainActivityE2eTests {
     @Test
     fun clickOnTeamListItem_ShowsCorrectResult() {
 
-        // Given - A resumed MainActivity already showing a list of teams as a search result
+        // Given - A resumed MainActivity
         activityScenario.moveToState(Lifecycle.State.CREATED)
         activityScenario.moveToState(Lifecycle.State.RESUMED)
         assert(activityScenario.state == Lifecycle.State.RESUMED)
@@ -124,12 +112,4 @@ class MainActivityE2eTests {
         )
     }
 
-
-
-    //@Test
-    fun templateTest() {
-        // Given -
-        // When -
-        // Then -
-    }
 }
