@@ -16,6 +16,9 @@ import com.gk.app.footballapp.view.image.ImageLoader
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+/**
+ * A fragment representing a team details.
+ */
 @AndroidEntryPoint
 class TeamDetailFragment : Fragment(), TeamDetailView {
 
@@ -62,37 +65,19 @@ class TeamDetailFragment : Fragment(), TeamDetailView {
         return view
     }
 
-    companion object {
-
-        const val ARG_TEAM_NAME = "team-name"
-
-        @JvmStatic
-        fun newInstance(teamName: String) =
-            TeamDetailFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_TEAM_NAME, teamName)
-                }
-            }
-    }
-
     override fun showError(message: String) {
-        if (BuildConfig.DEBUG) {
-            Log.i(logTag, "showError() $message")
-        }
         scrollView.visibility = View.GONE
 
         super.showError(message)
     }
 
     override fun hideError() {
-
-        // TODO can be improved with constraint group
         scrollView.visibility = View.VISIBLE
 
         super.hideError()
     }
 
-    override fun updateDetails(
+    override fun updateViews(
         bannerUrl: String?,
         teamName: String?,
         countryName: String?,
@@ -109,5 +94,19 @@ class TeamDetailFragment : Fragment(), TeamDetailView {
     override fun onDestroyView() {
         super.onDestroyView()
         teamDetailPresenter.onViewDestroyed()
+    }
+
+
+    companion object {
+
+        const val ARG_TEAM_NAME = "team-name"
+
+        @JvmStatic
+        fun newInstance(teamName: String) =
+            TeamDetailFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_TEAM_NAME, teamName)
+                }
+            }
     }
 }

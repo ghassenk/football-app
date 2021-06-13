@@ -19,7 +19,7 @@ object TestDoubles {
         var leagueName: String? = null
         var description: String? = null
 
-        override fun updateDetails(
+        override fun updateViews(
             bannerUrl: String?,
             teamName: String?,
             countryName: String?,

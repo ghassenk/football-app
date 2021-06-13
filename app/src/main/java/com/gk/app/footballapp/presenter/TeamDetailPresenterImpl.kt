@@ -5,7 +5,6 @@ import com.gk.app.football.domain.gateway.TeamGateway
 import com.gk.app.footballapp.BuildConfig
 import com.gk.app.footballapp.view.MainView
 import com.gk.app.footballapp.view.detail.TeamDetailView
-import com.gk.app.footballapp.view.search.TeamListItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,7 +32,7 @@ class TeamDetailPresenterImpl(
                         val firstTeam = results[0]
                         view.hideProgress()
                         view.hideError()
-                        view.updateDetails(
+                        view.updateViews(
                             firstTeam.bannerUrl,
                             firstTeam.name,
                             firstTeam.country,

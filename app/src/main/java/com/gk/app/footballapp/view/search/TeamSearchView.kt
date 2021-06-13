@@ -12,8 +12,8 @@ interface TeamSearchView : BaseView {
     //region View Updates
     fun updateSearchListItems(items: List<TeamListItem>)
     fun updateAutocompleteList(words: List<String>)
-    fun disableSearch()
-    fun enableSearch()
+    fun disableSearchBar()
+    fun enableSearchBar()
     fun hideKeyboard()
     //endregion
 

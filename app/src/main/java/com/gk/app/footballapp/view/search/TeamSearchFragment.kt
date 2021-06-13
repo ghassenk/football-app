@@ -23,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
- * A fragment representing a list of Items.
+ * A fragment representing a search bar and a list of results.
  */
 @AndroidEntryPoint
 class TeamSearchFragment : Fragment(), TeamSearchView {
@@ -159,14 +159,17 @@ class TeamSearchFragment : Fragment(), TeamSearchView {
                     words
                 )
             it.setAdapter(autocompleteAdapter)
+            it.setOnItemClickListener { _, _, _, _ ->
+                teamSearchPresenter.onSearchClicked(it.text.toString())
+            }
         }
     }
 
-    override fun disableSearch() {
+    override fun disableSearchBar() {
         editText?.isEnabled = false
     }
 
-    override fun enableSearch() {
+    override fun enableSearchBar() {
         editText?.isEnabled = true
     }
 

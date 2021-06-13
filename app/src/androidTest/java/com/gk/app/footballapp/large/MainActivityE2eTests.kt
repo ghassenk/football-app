@@ -1,6 +1,5 @@
 package com.gk.app.footballapp.large
 
-import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions.*
@@ -97,6 +96,8 @@ class MainActivityE2eTests {
             )
         )
         Espresso.onView(withContentDescription(testClickTeamName)).perform(click())
+
+        Thread.sleep(1000)
 
         // Then - The details of the correct team are shown
         Espresso.onView(withId(R.id.detail_fragment_layout)).check(
