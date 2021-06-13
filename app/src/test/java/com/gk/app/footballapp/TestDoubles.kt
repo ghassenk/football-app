@@ -63,10 +63,6 @@ object TestDoubles {
         override suspend fun searchAllSoccerLeagues(): List<League>? {
             return null
         }
-
-        override fun getLeagueNames(): List<String>? {
-            return null
-        }
     }
 
     class MockDetailTeamGateway : TeamGateway {
@@ -86,9 +82,6 @@ object TestDoubles {
             return null
         }
 
-        override fun getLeagueNames(): List<String>? {
-            return null
-        }
     }
 
     class MockTeam : Team {

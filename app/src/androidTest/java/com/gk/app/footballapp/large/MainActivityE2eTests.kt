@@ -42,10 +42,7 @@ class MainActivityE2eTests {
     @Test
     fun searchLeague_ShowsCorrectResultList() {
 
-        // Given - A resumed MainActivity
-        activityScenario.moveToState(Lifecycle.State.CREATED)
-        activityScenario.moveToState(Lifecycle.State.RESUMED)
-        assert(activityScenario.state == Lifecycle.State.RESUMED)
+        // Given - A MainActivity
 
         // When - I type league name in the search bar
         Espresso.onView(withId(R.id.search_fragment_edit_text))
@@ -67,10 +64,7 @@ class MainActivityE2eTests {
     @Test
     fun searchFakeLeague_ShowsError() {
 
-        // Given - A resumed MainActivity
-        activityScenario.moveToState(Lifecycle.State.CREATED)
-        activityScenario.moveToState(Lifecycle.State.RESUMED)
-        assert(activityScenario.state == Lifecycle.State.RESUMED)
+        // Given - A MainActivity
 
         // When - I type fake league name in the search bar
         Espresso.onView(withId(R.id.search_fragment_edit_text))
@@ -87,10 +81,7 @@ class MainActivityE2eTests {
     @Test
     fun clickOnTeamListItem_ShowsCorrectResult() {
 
-        // Given - A resumed MainActivity
-        activityScenario.moveToState(Lifecycle.State.CREATED)
-        activityScenario.moveToState(Lifecycle.State.RESUMED)
-        assert(activityScenario.state == Lifecycle.State.RESUMED)
+        // Given - A  MainActivity showing some search results
         val list = Espresso.onView(withId(R.id.search_fragment_recycler))
 
         Espresso.onView(withId(R.id.search_fragment_edit_text))
@@ -120,7 +111,7 @@ class MainActivityE2eTests {
     @Test
     fun searchLeague_ShowsCorrectAutoCompleteList() {
 
-        // Given - A TeamSearchFragment
+        // Given - A MainActivity
 
         // When - I type league name in the search bar
         Espresso.onView(withId(R.id.search_fragment_edit_text))
