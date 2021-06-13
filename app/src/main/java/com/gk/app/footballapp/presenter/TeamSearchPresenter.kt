@@ -7,7 +7,7 @@ import com.gk.app.footballapp.view.search.TeamSearchView
 interface TeamSearchPresenter : BasePresenter {
     val view: TeamSearchView
 
-    fun onSearchTextUpdated(newText: String)
+    fun loadAutoCompleteList()
     fun onSearchClicked(keyword: String)
     fun onTeamListItemClicked(teamItem: TeamListItem)
 

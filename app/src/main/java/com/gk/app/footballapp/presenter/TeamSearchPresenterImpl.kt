@@ -19,28 +19,28 @@ class TeamSearchPresenterImpl(
     private val logTag = javaClass.simpleName
 
     override var isViewDestroyed = false
-    private var autoCompleteList: List<String>? = null
+    private var autoCompleteList = ArrayList<String>()
 
-    override fun onSearchTextUpdated(newText: String) {
-        if (autoCompleteList == null) {
-            autoCompleteList = teamGateway.getLeagueNames()
-            autoCompleteList?.let {
-                view.updateAutocompleteList(it)
-            } ?: kotlin.run {
-                CoroutineScope(Dispatchers.Main).launch {
-                    try {
-                        teamGateway.searchAllLeagues()
-                        autoCompleteList = teamGateway.getLeagueNames()
-                        autoCompleteList?.let {
-                            view.updateAutocompleteList(it)
+    override fun loadAutoCompleteList() {
+        if (autoCompleteList.isEmpty()) {
+            CoroutineScope(Dispatchers.Main).launch {
+                try {
+                    val leagues = teamGateway.searchAllSoccerLeagues()
+                    if (!isViewDestroyed) {
+                        leagues?.let {
+                            it.forEach { autoCompleteList.add(it.name) }
+                            view.updateAutocompleteList(autoCompleteList)
+                        } ?: kotlin.run {
+                            Log.e(logTag, "Failed to get leagues")
                         }
-                    } catch (e: Exception) {
-                        Log.e(logTag, "Failed to get leagues", e)
                     }
+                } catch (e: Exception) {
+                    Log.e(logTag, "Failed to get leagues", e)
                 }
             }
         }
     }
+
 
     override fun onSearchClicked(keyword: String) {
         performSearch(keyword)

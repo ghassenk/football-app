@@ -6,10 +6,12 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.gk.app.footballapp.R
+import com.gk.app.footballapp.TestData
 import com.gk.app.footballapp.TestData.expectedSearchResultDescriptions
 import com.gk.app.footballapp.TestData.expectedTeamDescription
 import com.gk.app.footballapp.TestData.testClickPosition
@@ -18,6 +20,7 @@ import com.gk.app.footballapp.TestData.testFakeLeagueName
 import com.gk.app.footballapp.TestData.testLeagueName
 import com.gk.app.footballapp.view.MainActivity
 import com.gk.app.footballapp.view.search.TeamItemRecyclerViewAdapter
+import org.hamcrest.Matchers
 import org.hamcrest.Matchers.startsWith
 import org.junit.Before
 import org.junit.Test
@@ -98,7 +101,9 @@ class MainActivityE2eTests {
 
         // When - I click on an item
         list.perform(
-            RecyclerViewActions.scrollToPosition<TeamItemRecyclerViewAdapter.ViewHolder>(testClickPosition)
+            RecyclerViewActions.scrollToPosition<TeamItemRecyclerViewAdapter.ViewHolder>(
+                testClickPosition
+            )
         )
         Espresso.onView(withContentDescription(testClickTeamName)).perform(click())
 
@@ -110,6 +115,26 @@ class MainActivityE2eTests {
         Espresso.onView(withId(R.id.detail_fragment_description)).check(
             matches(withText(startsWith(expectedTeamDescription)))
         )
+    }
+
+    @Test
+    fun searchLeague_ShowsCorrectAutoCompleteList() {
+
+        // Given - A TeamSearchFragment
+
+        // When - I type league name in the search bar
+        Espresso.onView(withId(R.id.search_fragment_edit_text))
+            .perform(clearText())
+            .perform(typeText(TestData.testAutoCompleteKeyWord))
+
+        Thread.sleep(2000)
+
+        // Then - I get the correct list of Leagues
+        for ((index, word) in TestData.expectedAutoCompleteWords.withIndex()) {
+            Espresso.onView(withText(word))
+                .inRoot(RootMatchers.withDecorView(Matchers.not(Matchers.`is`(activity!!.window.decorView))))
+                .check(matches(isDisplayed()))
+        }
     }
 
 }

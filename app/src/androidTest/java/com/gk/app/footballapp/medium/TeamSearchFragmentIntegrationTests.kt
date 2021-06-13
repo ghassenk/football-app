@@ -3,16 +3,22 @@ package com.gk.app.footballapp.medium
 import android.os.Bundle
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.clearText
+import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.gk.app.footballapp.R
 import com.gk.app.footballapp.TestData
+import com.gk.app.footballapp.TestData.testAutoCompleteKeyWord
 import com.gk.app.footballapp.TestData.testLeagueName
 import com.gk.app.footballapp.launchFragmentInHiltMainContainer
 import com.gk.app.footballapp.view.search.TeamItemRecyclerViewAdapter
 import com.gk.app.footballapp.view.search.TeamSearchFragment
+import org.hamcrest.Matchers
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -69,7 +75,9 @@ class TeamSearchFragmentIntegrationTests {
     }
 
     private fun launchFragment(fragmentArgs: Bundle? = null) {
-        launchFragmentInHiltMainContainer<TeamSearchFragment>(fragmentArgs = fragmentArgs,
-            R.style.Theme_FootballApp) {}
+        launchFragmentInHiltMainContainer<TeamSearchFragment>(
+            fragmentArgs = fragmentArgs,
+            R.style.Theme_FootballApp
+        ) {}
     }
 }

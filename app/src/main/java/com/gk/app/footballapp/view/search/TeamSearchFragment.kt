@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -88,7 +89,6 @@ class TeamSearchFragment : Fragment(), TeamSearchView {
         errorText = view.findViewById(R.id.search_fragment_error_text)
         progressBar = view.findViewById(R.id.search_fragment_progress_bar)
 
-
         // Set the search edit text
         editText?.let {
             savedInstanceState?.let { bundle ->
@@ -97,13 +97,8 @@ class TeamSearchFragment : Fragment(), TeamSearchView {
                     it.setText(savedText)
                 }
             }
-            autocompleteAdapter =
-                ArrayAdapter<String>(
-                    it.context,
-                    android.R.layout.simple_dropdown_item_1line,
-                    emptyList()
-                )
-            it.setAdapter(autocompleteAdapter)
+
+            teamSearchPresenter.loadAutoCompleteList()
 
             it.setOnEditorActionListener(object : TextView.OnEditorActionListener {
                 override fun onEditorAction(
@@ -117,7 +112,6 @@ class TeamSearchFragment : Fragment(), TeamSearchView {
                     }
                     return false
                 }
-
             })
         }
 
@@ -153,8 +147,19 @@ class TeamSearchFragment : Fragment(), TeamSearchView {
     }
 
     override fun updateAutocompleteList(words: List<String>) {
-        autocompleteAdapter.clear()
-        autocompleteAdapter.addAll(words)
+        if (BuildConfig.DEBUG) {
+            Log.i(logTag, "updateAutocompleteList() $words")
+        }
+
+        editText?.let {
+            autocompleteAdapter =
+                ArrayAdapter<String>(
+                    it.context,
+                    android.R.layout.simple_dropdown_item_1line,
+                    words
+                )
+            it.setAdapter(autocompleteAdapter)
+        }
     }
 
     override fun disableSearch() {

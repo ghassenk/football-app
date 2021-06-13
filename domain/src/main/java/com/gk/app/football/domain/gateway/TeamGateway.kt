@@ -9,7 +9,7 @@ interface TeamGateway {
 
     suspend fun searchTeamDetails(teamName: String): List<Team>?
 
-    suspend fun searchAllLeagues(): List<League>?
+    suspend fun searchAllSoccerLeagues(): List<League>?
 
-    fun getLeagueNames(): List<String>?
+//    fun getLeagueNames(): List<String>?
 }

@@ -33,7 +33,7 @@ class TeamGatewayImpl(
         retrofit.create(ApiWebservice::class.java)
     }
 
-    private var leagueNames : ArrayList<String>? = null
+//    private var leagueNames : ArrayList<String>? = null
 
     override suspend fun searchTeamsByLeagueName(leagueName: String): List<Team>? {
         val queryMap = mapOf("l" to leagueName)
@@ -59,22 +59,14 @@ class TeamGatewayImpl(
         return response.teams
     }
 
-    override suspend fun searchAllLeagues(): List<League> {
+    override suspend fun searchAllSoccerLeagues(): List<League> {
         val response = webservice.searchLeagues(
             endpointPath = "all_leagues.php",
-            cacheControl = "max-age=600000" //refresh every week
+            cacheControl = "max-age=600000", //refresh every week
+            queryMap = mapOf("s" to "soccer")
         )
-
-        // Add to memory cache
-        leagueNames = ArrayList()
-        response.leagues.forEach { leagueNames!!.add(it.name) }
 
         return response.leagues
     }
-
-    override fun getLeagueNames(): List<String>? {
-        return leagueNames
-    }
-
 
 }

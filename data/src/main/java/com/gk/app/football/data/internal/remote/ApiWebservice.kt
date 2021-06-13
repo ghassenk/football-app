@@ -13,13 +13,13 @@ internal interface ApiWebservice {
     suspend fun searchTeams(
         @Path("endpoint_path") endpointPath: String,
         @Header("Cache-Control") cacheControl: String = "max-age=0",
-        @QueryMap queryMap: Map<String, String>? = null,
+        @QueryMap queryMap: Map<String, String>? = emptyMap(),
     ): TeamSearchResponse
 
     @GET("{endpoint_path}")
     suspend fun searchLeagues(
         @Path("endpoint_path") endpointPath: String,
         @Header("Cache-Control") cacheControl: String = "max-age=0",
-        @QueryMap queryMap: Map<String, String>? = null,
+        @QueryMap queryMap: Map<String, String>? = emptyMap(),
     ): LeagueSearchResponse
 }

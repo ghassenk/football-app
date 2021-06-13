@@ -60,7 +60,7 @@ object TestDoubles {
             return null
         }
 
-        override suspend fun searchAllLeagues(): List<League>? {
+        override suspend fun searchAllSoccerLeagues(): List<League>? {
             return null
         }
 
@@ -82,7 +82,7 @@ object TestDoubles {
             return result
         }
 
-        override suspend fun searchAllLeagues(): List<League>? {
+        override suspend fun searchAllSoccerLeagues(): List<League>? {
             return null
         }
 

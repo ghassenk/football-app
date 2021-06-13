@@ -21,4 +21,10 @@ object TestData {
         "Paris Saint-Germain Football Club, commonly referred to " +
                 "as Paris Saint-Germain, Paris SG, or simply Paris or PSG, is a French professional " +
                 "football club based in Paris. Founded in 1970,"
+
+    val testAutoCompleteKeyWord = "French"
+    val expectedAutoCompleteWords = arrayListOf(
+        "French Ligue 1", "French Ligue 2", "French LNB", "French Top 14", "French LNH Division 1",
+        "French LNB Pro B", // for simplicity we're not looking for exhaustive list
+    )
 }
